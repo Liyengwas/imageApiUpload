@@ -19,4 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('load-images', [ImageController::class, 'index']);
 Route::post('upload-image', [ImageController::class, 'upload']);
+Route::get('fetch-image/{id}', [ImageController::class, 'getAllImages']);

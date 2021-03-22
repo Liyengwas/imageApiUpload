@@ -2,13 +2,27 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Models\Image;
 use Validator;
+use App\Models\Image;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ImageResource as ImageResource;
 
 class ImageController extends Controller
 {
+    protected $image;
+
+    public function _construct(Image $image)
+    {
+        $this->image = $image;
+    }
+
+    public function index()
+    {
+        $images = ImageResource::collection(Image::all());
+
+        return $images;
+    }
 
     /**
      * Upload a newly created resource in storage.
@@ -36,16 +50,23 @@ class ImageController extends Controller
             //store your file into directory and db
             $save = new Image();
             $save->title = $file;
-            $save->path= $path;
+            $save->path = $path;
             $save->save();
 
             return response()->json([
                 "success" => true,
                 "message" => "File successfully uploaded",
-                "file" => $file
+                "file" => $file,
             ]);
 
         }
+
+    }
+
+    public function getAllImages(Request $request)
+    {
+
+        return $this->image->getImageStringAttribute($request->id);
 
     }
 
